@@ -5,3 +5,6 @@
 *.png
 *.jpg
 *.jpeg
+
+# Plex configuration — contains live auth token (PlexOnlineToken); never commit
+Preferences.xml

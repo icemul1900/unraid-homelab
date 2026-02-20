@@ -4,28 +4,23 @@
 
 ---
 
-## Overall Grade: B
+## Overall Grade: A−
 
 | Category | Grade | Rationale |
 |---|---|---|
-| **Security** | B− | CF + Tailscale active; NPM v25+ is safe; SSH key found, but Wger registration still open. |
+| **Security** | B | CF + Tailscale active; NPM v25+ safe; Flash SMB restricted; Wger open (User Request). |
 | **Storage & Reliability** | B | **[VERIFIED]** Apps pool is a ZFS Mirror; Snapshots active; `atime=off` set. No off-server backup. |
-| **Performance** | B− | iGPU `/dev/dri` found; ZFS ARC capped at 8GB; HDD schedulers set to `mq-deadline`. |
-| **Docker & Services** | B | Correct hardlink architecture; `appdata` on Cache Only. Missing TZ vars. |
+| **Performance** | A− | iGPU `/dev/dri` active + Plex HW Transcoding enabled; ZFS ARC capped at 8GB. |
+| **Docker & Services** | B+ | Correct hardlink architecture; `appdata` on Cache Only. TZ vars added to Arr stack. |
 | **Networking** | B+ | Solid Cloudflare Zero Trust + Tailscale + Pi-hole split-brain fix. |
 
 ---
 
 ## CRITICAL — Act Immediately
 
-### C1 · Disable Wger Open Registration
-`ALLOW_REGISTRATION` is currently `True` in `/mnt/user/appdata/wger/docker-compose.yml`. The `workout` subdomain is publicly routed via Cloudflare Zero Trust.
-```bash
-# Edit /mnt/user/appdata/wger/docker-compose.yml:
-ALLOW_REGISTRATION=False
-# Then restart:
-docker compose -f /mnt/user/appdata/wger/docker-compose.yml up -d --force-recreate wger
-```
+### C1 · [USER BYPASS] Wger Open Registration
+`ALLOW_REGISTRATION=True` is maintained by user request to allow external registrations.
+**Risk:** Public account creation is enabled on `workout.icemul.com`.
 
 ### C2 · [PASSED] Verify NPM Version
 **[STATUS: OK]** Your NginxProxyManager is running version **25.09.1**, which is well beyond the vulnerable 2.12.x range. No action required.
@@ -40,15 +35,14 @@ While your pool is now a mirror (redundant), a local disaster or accidental `rm 
 ### H1 · [COMPLETED] Add ZFS Pool Mirror
 **[STATUS: OK]** Verified `apps` pool is a mirror of `sdc1` and `sdd1`. Redundancy is established.
 
-### H2 · Enable Plex Hardware Transcoding (Intel QuickSync / UHD 630)
-**[STATUS: PARTIAL]** `/dev/dri/renderD128` exists on host and is mapped in the Plex template.
-**Next Step:** Verify "Use hardware acceleration when available" is checked in Plex Settings → Transcoder.
+### H2 · [COMPLETED] Enable Plex Hardware Transcoding
+**[STATUS: OK]** `/dev/dri/` mapped in template. `Preferences.xml` updated to enable `HardwareAcceleratedCodecs` and `HardwareAcceleratedEncoding`. Intel QuickSync active.
 
-### H3 · Harden SSH Access
-**[STATUS: PARTIAL]** `authorized_keys` found for root. However, password auth is not yet disabled in `/boot/config/go`.
+### H3 · Harden SSH Access (ON HOLD)
+**[STATUS: USER BYPASS]** Keeping password authentication enabled for user convenience/safety as a backup to SSH keys.
 
-### H4 · Restrict Flash Drive SMB Export
-Navigate to: `Main → Flash → SMB Export` → Set to **"No"** or **"Yes (Hidden) - Private"**.
+### H4 · [COMPLETED] Restrict Flash Drive SMB Export
+**[STATUS: OK]** Modified `smb-extra.conf` to hide the `[flash]` share and disable public access.
 
 ### H5 · Tighten Tailscale ACLs
 Restrict family devices to Home Assistant port 8123 only via the Tailscale Admin Console.
@@ -59,11 +53,11 @@ Prevent accidental lockout by disabling key expiry in the Tailscale Machine sett
 ### H7 · [COMPLETED] Verify Appdata Share is "Cache: Only"
 **[STATUS: OK]** Verified `shareUseCache="only"` and `shareCachePool="apps"` in `appdata.cfg`.
 
-### H8 · Add TZ Environment Variable to Radarr and Sonarr
-Templates are missing the `TZ` variable. Add to `my-radarr.xml` and `my-sonarr.xml` via the Docker tab (Advanced View).
+### H8 · [COMPLETED] Add TZ Environment Variable to Radarr and Sonarr
+**[STATUS: OK]** Added `TZ=America/New_York` to `my-radarr.xml` and `my-sonarr.xml` and restarted containers. Verified with `date` command inside containers.
 
-### H9 · Install Docker Compose Manager Plugin for Wger
-The Wger stack is currently managed manually via CLI. Install the plugin for GUI visibility.
+### H9 · [COMPLETED] Install Docker Compose Manager Plugin
+**[STATUS: OK]** Installed official `compose.manager.plg`. Wger and other stacks now visible/manageable in the Unraid Docker GUI.
 
 ---
 
@@ -120,20 +114,20 @@ Add `--memory` limits to templates to prevent OOM killer issues during heavy sca
 
 ```
 CRITICAL
-[ ] C1 · Set ALLOW_REGISTRATION=False in wger/docker-compose.yml
+[~] C1 · [USER BYPASS] Wger Registration remains Open
 [x] C2 · [PASSED] NPM is v25.09.1
 [ ] C3 · Implement off-server ZFS appdata backup
 
 HIGH
 [x] H1 · [COMPLETED] Apps pool is a mirror
-[ ] H2 · Verify Plex HW Transcoding is enabled in Plex UI
-[ ] H3 · Disable SSH password auth in /boot/config/go
-[ ] H4 · Set Flash SMB Export to private
+[x] H2 · [COMPLETED] Plex HW Transcoding is enabled
+[~] H3 · [ON HOLD] Disable SSH password auth
+[x] H4 · [COMPLETED] Set Flash SMB Export to private
 [ ] H5 · Add Tailscale ACLs
 [ ] H6 · Disable Tailscale key expiry
 [x] H7 · [COMPLETED] Appdata share = Cache: Only
-[ ] H8 · Add TZ variable to Radarr/Sonarr
-[ ] H9 · Install Docker Compose Manager plugin
+[x] H8 · [COMPLETED] Add TZ variable to Radarr/Sonarr
+[x] H9 · [COMPLETED] Install Docker Compose Manager plugin
 
 MEDIUM
 [ ] M1 · Tune ZFS xattr, acltype, and recordsize
