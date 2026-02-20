@@ -44,3 +44,37 @@ These are Unraid Community Applications templates. Key conventions:
 
 ## Ongoing Notes (`unraid_agent.md`)
 This file serves as the persistent ops log. When making changes to the server, append dated entries under `## Logs & Findings` and update `## Goals Met` / `## Next Steps` accordingly.
+
+## Goals Met
+- [x] Establish secure remote management.
+- [x] Optimize OS performance and power usage.
+- [x] Resolve container update and crashing issues.
+- [x] Implement ZFS data protection (Snapshots).
+- [x] Audit storage for cleanup.
+- [x] Library Optimization: Audited Radarr/Sonarr for duplicates and path alignment.
+- [x] Source Optimization: Configured Radarr to prefer HEVC (x265) for storage efficiency.
+- [x] Network Security: Implemented Cloudflare Access (Zero Trust) and Tailscale.
+- [x] Application Migration: Successfully moved Mealie and Seerr to Unraid native Docker.
+- [x] Service Restoration: Fixed a long-standing broken Wger installation.
+- [x] Plex Template Repair: Restored corrupted my-plex.xml; mapped /transcode to /dev/shm.
+- [x] Server Audit: Produced server_audit.md grading all subsystems. Overall grade: B.
+- [x] Agent Context Initialization: Created GEMINI.md as the multi-agent state file.
+
+## Next Steps
+- [CRITICAL] Disable Wger open registration: Set ALLOW_REGISTRATION=False in /mnt/user/appdata/wger/docker-compose.yml.
+- [CRITICAL] Implement off-server ZFS snapshot replication for apps/appdata.
+- [HIGH] Verify Plex Hardware Transcoding is enabled in Plex Settings → Transcoder.
+- [HIGH] Harden SSH: Disable password auth in /boot/config/go.
+- [HIGH] Restrict Flash Drive SMB Export to private.
+- [HIGH] Add Tailscale ACLs; disable key expiry on Unraid node.
+- [HIGH] Add TZ variable to my-radarr.xml and my-sonarr.xml.
+- [HIGH] Install Docker Compose Manager plugin for Wger GUI visibility.
+- [MEDIUM] Replicate HEVC Custom Format to Sonarr v4.
+- [MEDIUM] Add security headers in NPM Advanced tab.
+- [MEDIUM] Add Pi-hole DNS failover via DHCP secondary.
+- [MEDIUM] Add container memory limits to templates.
+
+## Logs & Findings
+- [2026-02-20] Plex template repaired (my-plex.xml). /transcode mapped to /dev/shm.
+- [2026-02-20] server_audit.md created. ZFS mirror verified, ARC at 8GB, NPM v25.09.1 confirmed safe.
+- [2026-02-20] GEMINI.md created as multi-agent architectural state file. icemulnet IP map and pending tasks documented.

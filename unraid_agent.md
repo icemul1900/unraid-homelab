@@ -18,6 +18,9 @@
 - [x] **Network Security:** Implemented Cloudflare Access (Zero Trust) and Tailscale.
 - [x] **Application Migration:** Successfully moved Mealie and Seerr to Unraid native Docker.
 - [x] **Service Restoration:** Fixed a long-standing broken Wger installation.
+- [x] **Plex Template Repair:** Restored corrupted `my-plex.xml`; mapped `/transcode` to `/dev/shm` for RAM-based transcoding.
+- [x] **Server Audit:** Produced comprehensive `server_audit.md` grading all subsystems (Security, Storage, Performance, Docker, Networking). Verified ZFS mirror status, ARC cap, and NPM version.
+- [x] **Agent Context Initialization:** Created `GEMINI.md` as the authoritative multi-agent state file with architectural snapshot and pending task registry.
 
 ## Logs & Findings
 - [2026-02-13] **ZFS Protection:** Deployed rotation script and ZFS Master Plugin.
@@ -47,9 +50,28 @@
     - Configured Gmail SMTP for email verification.
 - [2026-02-18] **DNS Optimization:**
     - Resolved "Split-Brain" DNS loop by removing conflicting local A records in Pi-holes for Cloudflare Tunnel hostnames. This ensures devices use the Cloudflare edge for correct routing and SSL handling.
+- [2026-02-20] **Plex Template Repair & Audit:**
+    - Fixed corrupted `my-plex.xml`; restored Plex GUI and Docker template management.
+    - Added `/transcode` → `/dev/shm` volume mapping so Plex uses RAM for transcoding segments, reducing array and cache I/O.
+    - Produced `server_audit.md` with per-category grades (Overall: B). Confirmed ZFS pool is a mirror (`sdc1`/`sdd1`), ARC is capped at 8GB, NPM is v25.09.1 (safe), and disk schedulers are `mq-deadline`.
+    - Identified remaining critical gap: no off-server ZFS snapshot replication exists.
+- [2026-02-20] **Multi-Agent Context File Created:**
+    - Authored `GEMINI.md` to serve as the authoritative architectural state file for all AI agents.
+    - Documented the full `icemulnet` static IP map, ZFS pool configuration, and pending task registry.
+    - Synchronized findings from `server_audit.md` and `unraid_agent.md` into `GEMINI.md`.
 
 ## Next Steps
+- **[CRITICAL] Disable Wger open registration:** Set `ALLOW_REGISTRATION=False` in `/mnt/user/appdata/wger/docker-compose.yml` and recreate the `wger` container.
+- **[CRITICAL] Implement off-server backup:** Configure ZFS snapshot replication to an external target (USB drive, remote server, or cloud) for `apps/appdata`.
+- **[HIGH] Verify Plex Hardware Transcoding:** Confirm "Use hardware acceleration when available" is enabled in Plex Settings → Transcoder.
+- **[HIGH] Harden SSH:** Disable password authentication in `/boot/config/go`.
+- **[HIGH] Restrict Flash Drive SMB Export** to private in Unraid Main → Flash.
+- **[HIGH] Tailscale ACLs:** Restrict family devices to Home Assistant port 8123 only; disable key expiry on the Unraid node.
+- **[HIGH] Add TZ variable** to `my-radarr.xml` and `my-sonarr.xml` templates.
+- **[HIGH] Install Docker Compose Manager plugin** for Wger GUI visibility.
+- **[MEDIUM] Replicate HEVC Custom Format to Sonarr v4.**
+- **[MEDIUM] Add security headers** (X-Frame-Options, X-Content-Type-Options) in NPM Advanced tab.
+- **[MEDIUM] Add Pi-hole DNS failover** (secondary DNS via DHCP).
+- **[MEDIUM] Add container memory limits** (`--memory`) to templates.
 - Monitor Cloudflare Security events for blocked unauthorized access attempts.
-- Re-evaluate Wger `ALLOW_REGISTRATION` setting (change to `False` once friends have joined).
-- **Remote Desktop Replacement:** Plan implementation of RustDesk on Unraid to replace TeamViewer.
-- Periodically check ZFS snapshots via "ZFS Master" plugin.
+- Periodically verify ZFS snapshots via the "ZFS Master" plugin.
