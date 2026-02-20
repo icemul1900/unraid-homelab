@@ -1,0 +1,7 @@
+# Claude Code session data
+.claude/
+
+# Binary assets not needed in version control
+*.png
+*.jpg
+*.jpeg
