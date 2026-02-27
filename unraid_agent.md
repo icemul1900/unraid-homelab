@@ -8,7 +8,7 @@
 - **Storage:** 15TB Array + 1TB ZFS Cache (apps pool)
 
 ## Goals Met
-- [x] **Server Audit v2:** Dual-agent re-audit (homelab expert + Gemini researcher) produced `server_audit_v2.md`. Grade revised to B+ (down from A-). 5 new findings identified.
+- [x] **Server Audit v2:** Dual-agent re-audit produced `server_audit_v2.md`. Grade revised to B+.
 - [x] Establish secure remote management.
 - [x] Optimize OS performance and power usage.
 - [x] Resolve container update and crashing issues.
@@ -19,44 +19,59 @@
 - [x] **Network Security:** Implemented Cloudflare Access (Zero Trust) and Tailscale.
 - [x] **Application Migration:** Successfully moved Mealie and Seerr to Unraid native Docker.
 - [x] **Service Restoration:** Fixed a long-standing broken Wger installation.
-- [x] **Plex Template Repair:** Restored corrupted `my-plex.xml`; mapped `/transcode` to `/dev/shm` for RAM-based transcoding.
-- [x] **Server Audit:** Produced comprehensive `server_audit.md` grading all subsystems. Grade bumped to **A-** after session fixes.
+- [x] **Plex Template Repair:** Restored corrupted `my-plex.xml`.
+- [x] **Server Audit:** Produced comprehensive `server_audit.md`. Grade bumped to **A-**.
 - [x] **Agent Context Initialization:** Created `GEMINI.md` as the authoritative multi-agent state file.
-- [x] **Plex Hardware Acceleration:** Enabled Intel QuickSync (iGPU) in `Preferences.xml` and verified template mapping.
-- [x] **SMB Hardening:** Restricted and hidden the Unraid Flash drive SMB export via `smb-extra.conf`.
-- [x] **Arr Stack Synchronization:** Added `TZ=America/New_York` to Radarr and Sonarr XML templates and verified container environments.
-- [x] **Docker Visibility:** Installed Docker Compose Manager plugin for GUI management of Compose stacks.
+- [x] **Plex Hardware Acceleration:** Enabled Intel QuickSync (iGPU).
+- [x] **SMB Hardening:** Restricted and hidden the Unraid Flash drive SMB export.
+- [x] **Arr Stack Synchronization:** Added `TZ=America/New_York` and verified container environments.
+- [x] **Network Migration:** Migrated `icemulnet` to a `/24` subnet (`172.18.0.0/24`).
+- [x] **Security Hardening:** Removed Prowlarr NPM proxy and added global security headers.
+- [x] **Plex Upload Rate:** Fixed `WanTotalMaxUploadRate` (4500 Kbps).
+- [x] **Resource Limits:** Added memory limits and healthchecks to templates.
+- [x] **Permissions:** Tightened `UMASK` to `002` for Radarr and Sonarr.
+- [x] **ZFS Protection:** Improved `zfs_snapshot.sh` with exit-code checks and logging.
+- [x] **ZFS Optimization:** Set `xattr=sa acltype=posixacl dnodesize=auto compression=lz4`.
+- [x] **Docker Visibility:** Installed Docker Compose Manager plugin.
+- [x] **Plex Token Rotation:** Rotated Plex token after exposure.
+- [x] **ZFS Script v3:** Fixed critical pool health check bug.
+- [x] **Plex Template Hardening:** Fixed UMASK, cleared stale PLEX_CLAIM, added --memory-swap.
+- [x] **Arr Stack Template Hardening:** Added --memory-swap and --health-start-period.
+- [x] **NPM Headers:** Removed deprecated `X-XSS-Protection`.
+- [x] **Server Audit v3:** Grade upgraded to A-. 6 new findings identified and fixed.
+- [x] **Library Cleanup:** Resolved Plex matching conflict for 'The Last Frontier'.
+- [x] **Permissions Repair:** Fixed SMB access to `/mnt/user/plex/tv/`.
+- [x] **Zuzz Stream Proxy:** Deployed `zuzz-proxy` PHP/Apache container. Full Jellyfin Live TV guide integration working end-to-end.
+- [x] **Zuzz Proxy Hardened:** Restored WebUI dropdown link via explicit labels and enabled container autostart.
+- [x] **Plane Project Management:** Deployed full Plane Community stack. Integrated tasks into "Homelab Management" project.
+- [x] **Plane Automation:** Plane admin configured, bot verified, projects created for all `C:\AI tools\Home` folders, labels/modules + Triage Queue applied, automation scripts deployed, daily summaries scheduled at 01:00.
+- [x] **Plane Docker Panel Fixed:** Corrected `net.unraid.docker.managed` label value (`true` → `dockerman`). Cleaned ~40 ghost entries from docker.json. Plane shows as single managed icon with up-to-date status.
+- [x] **Plane Auth Redirect Fixed:** Patched `start.sh` with `APP_PORT`/`port_suffix` logic; bind-mounted from host at `/mnt/user/appdata/plane/start.sh`. Sign-in/sign-out redirects now correctly target port 8083.
+- [x] **Plane LAB Issues Restored:** 47 issues created via Plane REST API (35 Done, 10 Todo, 2 Cancelled).
+- [x] **Plane Backup Automated:** `plane_backup.sh` deployed to User Scripts. Backs up PostgreSQL, MinIO, Redis, and config files daily at 3:15 AM to `/mnt/user/backups/Unraid/plane_data/`. 14-day retention. Test confirmed (840K written).
 
 ## Logs & Findings
 - [2026-02-13] **ZFS Protection:** Deployed rotation script and ZFS Master Plugin.
-- [2026-02-13] **Hardlinks (Arr Stack):** Verified unified paths under `/data` for Sonarr and Radarr. Atomic moves confirmed working.
-- [2026-02-16] **Radarr Library Audit:** Imported 200+ movies; removed duplicates and reclaimed space.
-- [2026-02-18] **Wger Workout Manager:** Deployed Docker Compose stack; fixed static files and CSRF.
-- [2026-02-20] **Docker Storage Cleanup:** Reclaimed 9.5GB by pruning unused images/containers after a full `docker.img` caused a failed Huly installation attempt.
-- [2026-02-20] **Huly Cleanup:** Attempted Huly self-hosted installation; encountered CockroachDB auth and Elasticsearch resource issues. Successfully removed all trace containers, networks, and images to return to clean state.
-- [2026-02-20] **Plex Performance:** Verified `/dev/dri/renderD128` availability and permissions. Enabled `HardwareAcceleratedCodecs` and `HardwareAcceleratedEncoding` in `Preferences.xml`.
-- [2026-02-20] **Arr stack TZ fix:** Updated `my-radarr.xml` and `my-sonarr.xml` in `/boot/config/plugins/dockerMan/templates-user/`. Restarted containers to apply EST timezone.
-- [2026-02-20] **Flash SMB Security:** Modified `smb-extra.conf` to set `[flash]` share to `browseable = no` and `public = no`. Reloaded Samba.
-- [2026-02-20] **Server Audit v2:** Dual-agent re-audit completed. Grade revised B+ (was A-). 5 new critical/high findings: Plex token in git, ZFS snapshot script logic bug, WanTotalMaxUploadRate 100× wrong (450 Mbps), icemulnet /16 subnet, UMASK=022. Report saved to `server_audit_v2.md`.
+- [2026-02-13] **Hardlinks (Arr Stack):** Verified unified paths under `/data`. Atomic moves confirmed.
+- [2026-02-20] **Docker Storage Cleanup:** Reclaimed 9.5GB by pruning unused images/containers.
+- [2026-02-24] **Server Audit v3:** Grade upgraded to A-. 6 new findings all fixed in-session. Two CRITICALs (off-server backup, Tailscale ACLs) remain unaddressed for 5 sessions.
+- [2026-02-26] **Zuzz Stream Proxy (guide fully working):** Root cause chain for guide never updating identified and fixed. Guide is now confirmed working: 5 channels, 5 programmes showing correct stream event names.
+- [2026-02-26] **Zuzz-Proxy Fixes:** Restored missing WebUI link by recreating the container with explicit `net.unraid.docker.webui` and `net.unraid.docker.icon` labels. Enabled autostart with `--restart unless-stopped`.
+- [2026-02-26] **Plane Deployment:** Migrated Plane stack to `icemulnet` with static IPs (172.18.0.20-32). Fixed startup crashes (Gunicorn workers) and cleaned up Unraid dashboard by grouping containers and using "stealth" naming for helper services.
+- [2026-02-27] **Plane Automation:** Admin + bot tokens stored, automation scripts/config created, labels/modules/Triage Queue applied to all projects, daily summaries scheduled at 01:00.
+- [2026-02-27] **Plane Docker Panel Fixed (Session 8):** Root cause was `net.unraid.docker.managed=true` — value must be `"dockerman"` for DockerClient.php. Fixed ExtraParams label in `my-plane.xml`. Cleaned ~40 stale ghost entries from docker.json. Single managed icon confirmed.
+- [2026-02-27] **Plane Auth Redirect Port Bug Fixed:** Upstream `start.sh` omits port from WEB_URL/CORS. DOMAIN_NAME validator rejects IP:port. Fix: patched `start.sh` with `APP_PORT` env var and `port_suffix` variable. Bind-mounted `/mnt/user/appdata/plane/start.sh` → `/app/start.sh:ro`. `my-plane.xml` updated with `APP_PORT=8083` config variable. Auth redirects now correct.
+- [2026-02-27] **Plane LAB Issues Restored via API:** 47 issues (35 Done, 10 Todo, 2 Cancelled). Workspace: "home", project: LAB. API key at `C:\AI tools\secrets\plane_api.txt`.
+- [2026-02-27] **Plane Automated Backup Deployed:** `plane_backup.sh` in User Scripts. pg_dump (custom format), MinIO tar.gz, Redis RDB, config files. Dest: `/mnt/user/backups/Unraid/plane_data/`. Log: `/boot/logs/plane-backup.log`. 14-day retention, 3:15 AM daily. Test run: 840K OK.
 
 ## Next Steps
-- **[USER BYPASS] Wger open registration:** User requested to keep registration active for others.
-- **[ON HOLD] Harden SSH:** User opting to keep password auth enabled as a safety backup to SSH keys.
-- **[CRITICAL] Add Preferences.xml to .gitignore + rotate Plex token.** Live auth token found in git repo. *** NEW ***
-- **[CRITICAL] Fix ZFS snapshot script:** No exit-code check, `2>/dev/null` masks errors, no pool health gate, no logging. *** NEW ***
-- **[CRITICAL] Implement off-server backup:** Sanoid+Syncoid → rsync.net or LAN backup host. 3 sessions overdue.
-- **[CRITICAL] Configure Tailscale ACLs:** Escalated. Exit node + no ACLs = full LAN exposure. See ACL policy in server_audit_v2.md.
-- **[HIGH] Fix Plex WanTotalMaxUploadRate:** Currently `450000` (450 Mbps). Should be `4500` for ~4.5 Mbps cap. *** NEW ***
-- **[HIGH] Migrate icemulnet to /24:** Current /16 risks Docker subnet collisions. *** NEW ***
-- **[HIGH] Change UMASK 022 → 002** in Radarr + Sonarr templates. *** NEW ***
-- **[HIGH] Remove/restrict Prowlarr NPM proxy entry.** No auth layer; should be internal-only. *** NEW ***
+- **[CRITICAL] Implement off-server backup:** Sanoid+Syncoid → rsync.net or LAN backup host. 5 sessions overdue.
+- **[CRITICAL] Configure Tailscale ACLs:** Escalated. Exit node + no ACLs = full LAN exposure.
 - **[HIGH] Disable Tailscale key expiry** on Unraid node.
-- **[MEDIUM] Set ZFS properties:** `xattr=sa acltype=posixacl dnodesize=auto compression=lz4` on both datasets.
-- **[MEDIUM] Add healthchecks** to Radarr + Sonarr ExtraParams. *** NEW ***
-- **[MEDIUM] Add container memory limits** to templates (Radarr/Sonarr 1g, Plex 4g).
+- **[HIGH] Verify binhex-delugevpn:** Kill switch, LAN_NETWORK setting, WebUI exposure.
+- **[HIGH] Audit/replace Seerr image:** ghcr.io/seerr-team/seerr is a third-party fork holding API keys.
 - **[MEDIUM] Replicate HEVC Custom Format to Sonarr** via Recyclarr.
-- **[MEDIUM] Add security headers** in NPM Advanced tab.
-- **[MEDIUM] Add Pi-hole secondary** (second container on icemulnet + Gravity Sync).
-- **[LOW] Verify Plex remote access** — use Tailscale over port forwarding/relay.
-- **[LOW] Verify Wger CSRF_TRUSTED_ORIGINS** still set correctly.
-- **[LOW] Audit Seerr image provenance** (third-party fork holds API keys).
+- **[MEDIUM] Add Pi-hole secondary** (second container on icemulnet).
+- **[MEDIUM] ZFS: set compression=zstd and recordsize=16K** on apps/appdata.
+- **[MEDIUM] Add ZFS snapshot failure alerting** (healthchecks.io or Unraid notify).
+- **[MEDIUM] Configure HSTS at Cloudflare edge** for CF-proxied subdomains.

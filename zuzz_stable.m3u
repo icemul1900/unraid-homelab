@@ -1,0 +1,15 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="usanetwork" tvg-name="USA Network" tvg-logo="https://img.zuzz.tv/assets/channels/3DkMPY1wYO7mFGTGispHwPtw5VWwLGQvfhJGodUp4isSONVxwI.png" group-title="Sports",USA Network
+http://192.168.128.43:8082/index.php?stream=usanetwork
+
+#EXTINF:-1 tvg-id="nhlnetwork" tvg-name="NHL Network" tvg-logo="https://img.zuzz.tv/assets/channels/fmmBmmJBXkKtQQPtny0LyE8eS3AIU6yY5mroBTv0Q6SLuriMQy.png" group-title="Sports",NHL Network
+http://192.168.128.43:8082/index.php?stream=nhlnetwork
+
+#EXTINF:-1 tvg-id="nflnetwork" tvg-name="NFL Network" tvg-logo="https://img.zuzz.tv/assets/channels/3DkMPY1wYO7mFGTGispHwPtw5VWwLGQvfhJGodUp4isSONVxwI.png" group-title="Sports",NFL Network
+http://192.168.128.43:8082/index.php?stream=nflnetwork
+
+#EXTINF:-1 tvg-id="redzone" tvg-name="NFL Redzone" tvg-logo="https://img.zuzz.tv/assets/channels/QNw5GGgZ1VLbCNOXockuk9xTRBgXzRGkZBvWzXw4PZ6hMB6Pn7.png" group-title="Sports",NFL Redzone
+http://192.168.128.43:8082/index.php?stream=redzone
+
+#EXTINF:-1 tvg-id="sneast" tvg-name="NHL Pens" group-title="Sports",NHL Pens
+http://192.168.128.43:8082/index.php?stream=sneast

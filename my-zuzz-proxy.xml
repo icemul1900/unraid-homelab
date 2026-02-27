@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>zuzz-proxy</Name>
+  <Repository>php:8.3-apache</Repository>
+  <Registry>https://hub.docker.com/_/php</Registry>
+  <Network>icemulnet</Network>
+  <MyIP>172.18.0.15</MyIP>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project>https://github.com/php/php-src</Project>
+  <ReadMe/>
+  <Overview>A tiny PHP redirector proxy for dynamic sports streams. Provides stable URLs for Jellyfin/Plex and a simple web interface to update auth tokens.</Overview>
+  <Category>Tools: MediaServer:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/jellyfin-logo.png</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1772042400</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="HTTP Port" Target="80" Default="80" Mode="tcp" Description="Internal Apache Port" Type="Port" Display="always" Required="true" Mask="false">8082</Config>
+  <Config Name="Appdata" Target="/var/www/html/" Default="/mnt/user/appdata/zuzz-proxy/" Mode="rw" Description="PHP Script and JSON data storage." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/zuzz-proxy/</Config>
+  <Config Name="Jellyfin Cache" Target="/jellyfin-cache/" Default="/mnt/user/appdata/jellyfin/cache/" Mode="rw" Description="Jellyfin cache dir — allows Force Refresh to clear the XMLTV cache so Jellyfin re-downloads fresh guide data." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/jellyfin/cache/</Config>
+</Container>

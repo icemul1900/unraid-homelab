@@ -15,7 +15,7 @@
   <WebUI>http://[IP]:[PORT:7878]/system/status</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/linuxserver/templates/main/unraid/radarr.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/radarr-logo.png</Icon>
-  <ExtraParams/>
+  <ExtraParams>--memory=1g --memory-swap=1g --health-cmd="curl -sf http://localhost:7878/ping || exit 1" --health-interval=60s --health-retries=3 --health-start-period=30s</ExtraParams>
   <PostArgs/>
   <CPUset/>
   <DateInstalled>1771009844</DateInstalled>
@@ -27,6 +27,6 @@
   <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/radarr" Mode="rw" Description="Database and radarr configs" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/radarr</Config>
   <Config Name="PUID" Target="PUID" Default="99" Mode="{3}" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
   <Config Name="PGID" Target="PGID" Default="100" Mode="{3}" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
-  <Config Name="UMASK" Target="UMASK" Default="022" Mode="{3}" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">022</Config>
+  <Config Name="UMASK" Target="UMASK" Default="022" Mode="{3}" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">002</Config>
   <Config Name="Timezone" Target="TZ" Default="UTC" Mode="{3}" Description="" Type="Variable" Display="always" Required="false" Mask="false">America/New_York</Config>
 </Container>

@@ -1,10 +1,9 @@
 # Claude Code session data
 .claude/
 
-# Binary assets not needed in version control
-*.png
-*.jpg
-*.jpeg
+# Binary assets (allowed for AI analysis)
+# *.jpg
+# *.jpeg
 
 # Plex configuration — contains live auth token (PlexOnlineToken); never commit
 Preferences.xml
